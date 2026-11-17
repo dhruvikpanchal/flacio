@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Libre Baskerville', Georgia, serif;
+  --font-sans: 'Poppins', sans-serif;
+  --color-brand-green: #224229;
+  --color-brand-dark: #313232;
+  --color-brand-muted: #828787;
+  --color-brand-border: #e8e8e8;
+  --color-badge-hot: #ff5656;
+  --color-badge-new: #96c19f;
+}
+
+/* Custom transitions and scrollbar styling */
+.nav-link-underline {
+  position: relative;
+}
+
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease-in-out;
+}
+
+.nav-link-underline.active::after,
+.nav-link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Custom scrollbar for drawers */
+.flacio-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.flacio-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.flacio-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(31, 32, 36, 0.25);
+  border-radius: 9999px;
+}
+.flacio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 66, 41, 0.6);
+}

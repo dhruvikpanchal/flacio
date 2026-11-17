@@ -1,0 +1,186 @@
+@import "./fonts.css";
+@import "./theme.css";
+@import "./tailwind.css";
+
+/* ==========================================================================
+   Scrollbar Architecture:
+   1. Main Pages (html / body): Scrollbar completely hidden, full scrolling preserved.
+   2. Subparts (Modals, Sidebars, Drawers, Tables): Current sleek floating pill scrollbar.
+   ========================================================================== */
+
+:root {
+  --sb-size: 6px;
+  --sb-thumb: rgba(31, 32, 36, 0.28);
+  --sb-thumb-hover: rgba(34, 66, 41, 0.65);
+  --sb-thumb-active: #224229;
+}
+
+/* 1. Main Pages: Scrollbar hidden completely while preserving scroll, prevent horizontal overflow */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 2. Subparts: Sleek floating pill scrollbar for modals, drawers, sidebars */
+@supports not selector(::-webkit-scrollbar) {
+  *:not(html):not(body) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb) transparent;
+  }
+}
+
+*:not(html):not(body)::-webkit-scrollbar {
+  width: var(--sb-size) !important;
+  height: var(--sb-size) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Hide track, track-piece, corner & native buttons completely */
+*:not(html):not(body)::-webkit-scrollbar-track,
+*:not(html):not(body)::-webkit-scrollbar-track-piece,
+*:not(html):not(body)::-webkit-scrollbar-corner {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+*:not(html):not(body)::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Floating capsule thumb for subparts */
+*:not(html):not(body)::-webkit-scrollbar-thumb {
+  background-color: var(--sb-thumb) !important;
+  border-radius: 9999px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+  transition: background-color 0.2s ease;
+}
+
+*:not(html):not(body)::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sb-thumb-hover) !important;
+}
+
+*:not(html):not(body)::-webkit-scrollbar-thumb:active {
+  background-color: var(--sb-thumb-active) !important;
+}
+
+/* Helper utility classes for explicit opt-in / opt-out */
+.no-scrollbar::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+.hide-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.custom-scrollbar,
+.flacio-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) transparent;
+}
+
+/* ==========================================================================
+   Section Reveal Animations (High Performance, Multi-Device Safe)
+   - Variety 1: .section-reveal / .section-reveal-up (Subtle botanical upward glide)
+   - Variety 2: .section-reveal-scale (Soft optical scale-up for cards & banners)
+   - Variety 3: .section-reveal-slide-left / .section-reveal-slide-right (Editorial lateral entrance)
+   ========================================================================== */
+
+/* Base initial hidden state */
+.section-reveal,
+.section-reveal-up,
+.section-reveal-scale,
+.section-reveal-slide-left,
+.section-reveal-slide-right {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Variety 1: Elegant upward glide */
+.section-reveal,
+.section-reveal-up {
+  transform: translate3d(0, 28px, 0);
+}
+
+/* Variety 2: Soft optical scale for imagery and cards */
+.section-reveal-scale {
+  transform: scale(0.96) translate3d(0, 16px, 0);
+}
+
+/* Variety 3: Editorial lateral slide (safe for mobile, no horizontal overflow) */
+.section-reveal-slide-left {
+  transform: translate3d(-24px, 0, 0);
+}
+
+.section-reveal-slide-right {
+  transform: translate3d(24px, 0, 0);
+}
+
+/* Active revealed state: fully visible, transform restored to neutral */
+.section-reveal.is-revealed,
+.section-reveal-up.is-revealed,
+.section-reveal-scale.is-revealed,
+.section-reveal-slide-left.is-revealed,
+.section-reveal-slide-right.is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Stagger delay utilities */
+.reveal-delay-100 { transition-delay: 100ms !important; }
+.reveal-delay-200 { transition-delay: 200ms !important; }
+.reveal-delay-300 { transition-delay: 300ms !important; }
+.reveal-delay-400 { transition-delay: 400ms !important; }
+.reveal-delay-500 { transition-delay: 500ms !important; }
+
+/* Accessibility & Fallback: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal,
+  .section-reveal-up,
+  .section-reveal-scale,
+  .section-reveal-slide-left,
+  .section-reveal-slide-right {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   Product Full View Lightbox Overrides
+   Hides Header, Mobile Bottom Nav, Compare Drawer, and Scroll-to-Top when in Full View
+   for all devices (Mobile, Tablet, Desktop)
+   ========================================================================== */
+body.product-fullview-open header,
+body.product-fullview-open nav[aria-label="Mobile Navigation"],
+body.product-fullview-open button[aria-label^="Open compare list"],
+body.product-fullview-open button[aria-label="Scroll to top"],
+body.product-fullview-open .pc-global-compare {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
